@@ -13,6 +13,7 @@ type Cell struct {
 }
 
 type Grid struct {
+	gen    int
 	dx, dy int
 	grid   [][]Cell
 }
@@ -59,9 +60,10 @@ func (g Grid) Print() {
 		}
 		fmt.Println()
 	}
+	fmt.Println(g.gen)
 }
 
-func (g Grid) Gen() {
+func (g *Grid) Gen() {
 	resCh := make(chan Cell, g.dx*g.dy)
 	for y := 0; y < len(g.grid); y++ {
 		for x := 0; x < len(g.grid[y]); x++ {
@@ -73,6 +75,7 @@ func (g Grid) Gen() {
 	for newCell := range resCh {
 		g.grid[newCell.y][newCell.x].alive = newCell.alive
 	}
+	g.gen++
 
 }
 
@@ -108,18 +111,20 @@ func main() {
 	sizeY := 20
 	grid := NewGrid(sizeX, sizeY)
 
+	// this stabilizes after 246 generations
+
 	// Blinker
-	grid.GetCell(1, 2).alive = true
-	grid.GetCell(2, 2).alive = true
-	grid.GetCell(3, 2).alive = true
+	grid.GetCell(11, 2).alive = true
+	grid.GetCell(12, 2).alive = true
+	grid.GetCell(13, 2).alive = true
 
 	// Beacon
-	//grid.GetCell(3, 1).alive = true
-	//grid.GetCell(4, 1).alive = true
-	//grid.GetCell(4, 2).alive = true
-	//grid.GetCell(1, 3).alive = true
-	//grid.GetCell(1, 4).alive = true
-	//grid.GetCell(2, 4).alive = true
+	grid.GetCell(3, 1).alive = true
+	grid.GetCell(4, 1).alive = true
+	grid.GetCell(4, 2).alive = true
+	grid.GetCell(1, 3).alive = true
+	grid.GetCell(1, 4).alive = true
+	grid.GetCell(2, 4).alive = true
 
 	// Glider
 	grid.GetCell(2, 5).alive = true
@@ -128,7 +133,7 @@ func main() {
 	grid.GetCell(4, 6).alive = true
 	grid.GetCell(3, 7).alive = true
 
-	for {
+	for grid.gen <= 246 {
 		grid.Print()
 		grid.Gen()
 		time.Sleep(250 * time.Millisecond)

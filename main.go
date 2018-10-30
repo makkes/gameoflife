@@ -128,11 +128,9 @@ func main() {
 	grid.GetCell(4, 6).alive = true
 	grid.GetCell(3, 7).alive = true
 
-	grid.Print()
-
 	for {
-		time.Sleep(250 * time.Millisecond)
-		grid.Gen()
 		grid.Print()
+		grid.Gen()
+		time.Sleep(250 * time.Millisecond)
 	}
 }

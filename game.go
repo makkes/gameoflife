@@ -58,7 +58,7 @@ func (g *Grid) Gen() {
 	resCh := make(chan CellGenEvent, g.dx*g.dy)
 	for y := 0; y < len(g.grid); y++ {
 		for x := 0; x < len(g.grid[y]); x++ {
-			g.genCell(x, y, resCh)
+			resCh <- g.genCell(x, y)
 		}
 	}
 	close(resCh)
@@ -70,7 +70,7 @@ func (g *Grid) Gen() {
 
 }
 
-func (g Grid) genCell(x, y int, res chan<- CellGenEvent) {
+func (g Grid) genCell(x, y int) CellGenEvent {
 	alive := g.GetCell(x, y)
 	cellGenEv := CellGenEvent{x, y, alive}
 	aliveNeighbours := 0
@@ -94,5 +94,5 @@ func (g Grid) genCell(x, y int, res chan<- CellGenEvent) {
 		}
 	}
 
-	res <- cellGenEv
+	return cellGenEv
 }

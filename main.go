@@ -133,7 +133,7 @@ func main() {
 	grid.GetCell(4, 6).alive = true
 	grid.GetCell(3, 7).alive = true
 
-	for grid.gen <= 246 {
+	for {
 		grid.Print()
 		grid.Gen()
 		time.Sleep(250 * time.Millisecond)
